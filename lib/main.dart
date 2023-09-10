@@ -1,14 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animation/l10n/L10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
+  bool isEng = true;
+  onPress() {
+    setState(() {
+      isEng = !isEng;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,70 +32,49 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       localizationsDelegates: const [
+        AppLocalizations.delegate, // Add this line
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('en'), // English
-        Locale('es'), // Spanish
-      ],
-      home: const MyWidget(),
+      // locale: const Locale('es'),
+
+      locale: isEng ? const Locale('en') : const Locale('es'),
+      supportedLocales: L10n.all,
+      home: MyWidget(
+        isEng: isEng,
+        onPress: onPress,
+      ),
     );
   }
 }
 
 class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
+  MyWidget({super.key, required this.isEng, required this.onPress});
+  void Function()? onPress;
+  bool isEng;
 
   @override
   State<MyWidget> createState() => _MyWidgetState();
 }
 
 class _MyWidgetState extends State<MyWidget> {
-  bool isEng = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Localization'),
+        title: Text(AppLocalizations.of(context)!.helloWorld),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    isEng = !isEng;
-                  });
-                },
-                child: isEng
-                    ? const Text("To Spanish")
-                    : const Text("To English")),
-            // Add the following code
-            Localizations.override(
-              context: context,
-              locale: Locale(isEng ? 'en' : 'es'),
-              // Using a Builder to get the correct BuildContext.
-              // Alternatively, you can create a new widget and Localizations.override
-              // will pass the updated BuildContext to the new widget.
-              child: Builder(
-                builder: (context) {
-                  // A toy example for an internationalized Material widget.
-                  return Column(
-                    children: [
-                      CalendarDatePicker(
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(1900),
-                        lastDate: DateTime(2100),
-                        onDateChanged: (value) {},
-                      ),
-                    ],
-                  );
-                },
-              ),
+              onPressed: widget.onPress,
+              child: Text('Change'),
+              // isEng ? const Text("To Spanish") : const Text("To English"),
             ),
+            Text(AppLocalizations.of(context)!.localeName),
           ],
         ),
       ),
