@@ -4,13 +4,22 @@ class CustomButton extends StatelessWidget {
   final String text;
   final double? marginVertical;
   final double? width;
+  final Color? color;
+  final Color? textColor;
   final Function() onPressed;
-  const CustomButton(
-      {required this.text,
-      this.marginVertical,
-      this.width,
-      required this.onPressed,
-      super.key});
+
+  final bool loading;
+
+  const CustomButton({
+    required this.text,
+    this.marginVertical,
+    this.width,
+    required this.onPressed,
+    this.loading = false,
+    this.color,
+    this.textColor,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +32,16 @@ class CustomButton extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: Colors.blue,
+          color: color ?? Colors.blue,
           borderRadius: BorderRadius.circular(5),
         ),
-        child: Text(
-          text,
-          style: const TextStyle(fontSize: 18),
-        ),
+        child: loading
+            ? const CircularProgressIndicator()
+            : Text(
+                text,
+                style:
+                    TextStyle(fontSize: 18, color: textColor ?? Colors.black),
+              ),
       ),
     );
   }
