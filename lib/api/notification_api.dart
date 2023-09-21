@@ -1,4 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 
 class NotificationApi {
   static final FlutterLocalNotificationsPlugin _notificationPlugin =
@@ -36,6 +38,7 @@ class NotificationApi {
     );
   }
 
+// for simple notification
   Future showNotification({
     int id = 2,
     String? title,
@@ -48,6 +51,29 @@ class NotificationApi {
       body,
       await notificationDetails(),
       payload: payload,
+    );
+  }
+
+// for scheduled notification
+  Future showScheduledNotification({
+    int id = 2,
+    String? title,
+    String? body,
+    String? payload,
+    required DateTime scheduledDate,
+  }) async {
+    tz.initializeTimeZones();
+
+    return _notificationPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      tz.TZDateTime.from(scheduledDate, tz.local),
+      await notificationDetails(),
+      androidAllowWhileIdle: true,
+      payload: payload,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
     );
   }
 }

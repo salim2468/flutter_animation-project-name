@@ -13,18 +13,6 @@ class _NotificationPageState extends State<NotificationPage> {
   NotificationApi notificationApi = NotificationApi();
 
   @override
-  void initState() {
-    // TODO: implement initState
-
-    super.initState();
-  }
-
-  void simpleNotification() {
-    notificationApi.showNotification(
-        title: 'Viber', body: 'New message from ABC', payload: 'sarah.abs');
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -35,14 +23,27 @@ class _NotificationPageState extends State<NotificationPage> {
           ElevatedButton(
             onPressed: () {
               NotificationApi().showNotification(
-                  title: 'Viber',
-                  body: 'New message from ABC',
-                  payload: 'sarah.abs');
+                title: 'Viber',
+                body: 'You have New message from ABC',
+                payload: 'sarah.abs',
+              );
             },
             child: const Text('Simple Notification'),
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              NotificationApi().showScheduledNotification(
+                  title: 'Whats App',
+                  body: 'You have New message from ABC',
+                  payload: 'sarah.abs',
+                  scheduledDate: DateTime.now().add(Duration(seconds: 5)));
+
+              final snackBar =
+                  SnackBar(content: Text('Scheduled after 5 seconds'));
+              ScaffoldMessenger.of(context)
+                ..removeCurrentSnackBar()
+                ..showSnackBar(snackBar);
+            },
             child: const Text('Scheduled Notification'),
           ),
           ElevatedButton(
