@@ -1,11 +1,12 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationApi {
-  static final _notificationPlugin = FlutterLocalNotificationsPlugin();
+  static final FlutterLocalNotificationsPlugin _notificationPlugin =
+      FlutterLocalNotificationsPlugin();
 
   static Future<void> initNotification() async {
     AndroidInitializationSettings androidInitializationSettings =
-        const AndroidInitializationSettings('e.png');
+        const AndroidInitializationSettings('e');
 
     var iosInitializationSettings = DarwinInitializationSettings(
         requestAlertPermission: true,
@@ -36,7 +37,7 @@ class NotificationApi {
   }
 
   Future showNotification({
-    int id = 0,
+    int id = 2,
     String? title,
     String? body,
     String? payload,

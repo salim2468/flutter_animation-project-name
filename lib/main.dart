@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animation/pages/notification_page.dart';
 
-void main() {
+import 'api/notification_api.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await NotificationApi.initNotification();
   runApp(const MyApp());
 }
 
