@@ -60,15 +60,20 @@ class NotificationApi {
     String? title,
     String? body,
     String? payload,
-    required DateTime scheduledDate,
+    required DateTime scheduledDateAndTime,
   }) async {
     tz.initializeTimeZones();
 
+    title = '$title + $scheduledDateAndTime';
     return _notificationPlugin.zonedSchedule(
       id,
       title,
       body,
-      tz.TZDateTime.from(scheduledDate, tz.local),
+      // tz.TZDateTime.from(scheduledDate, tz.local),
+      tz.TZDateTime.from(
+        scheduledDateAndTime,
+        tz.local,
+      ),
       await notificationDetails(),
       androidAllowWhileIdle: true,
       payload: payload,

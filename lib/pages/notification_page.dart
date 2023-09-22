@@ -9,6 +9,8 @@ class NotificationPage extends StatefulWidget {
   State<NotificationPage> createState() => _NotificationPageState();
 }
 
+DateTime scheduleTime = DateTime.now();
+
 class _NotificationPageState extends State<NotificationPage> {
   NotificationApi notificationApi = NotificationApi();
 
@@ -31,18 +33,40 @@ class _NotificationPageState extends State<NotificationPage> {
             child: const Text('Simple Notification'),
           ),
           ElevatedButton(
+            onPressed: () async {
+              final selectedTime = await showTimePicker(
+                context: context,
+                initialTime: TimeOfDay.now(),
+              );
+
+              if (selectedTime != null) {
+                // Convert the selected time to a DateTime
+                final now = DateTime.now();
+                scheduleTime = DateTime(
+                  now.year,
+                  now.month,
+                  now.day,
+                  selectedTime.hour,
+                  selectedTime.minute,
+                );
+              }
+            },
+            child: const Text('Remove Notification'),
+          ),
+          ElevatedButton(
             onPressed: () {
               NotificationApi().showScheduledNotification(
                   title: 'Whats App',
                   body: 'You have New message from ABC',
                   payload: 'sarah.abs',
-                  scheduledDate: DateTime.now().add(Duration(seconds: 5)));
+                  scheduledDateAndTime: scheduleTime);
 
               final snackBar =
                   SnackBar(content: Text('Scheduled after 5 seconds'));
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(snackBar);
+              print(scheduleTime);
             },
             child: const Text('Scheduled Notification'),
           ),
